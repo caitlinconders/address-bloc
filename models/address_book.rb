@@ -1,6 +1,7 @@
 
 ##we tell Ruby to load the library named entry.rb relative to  address_book.rb's file path using require_relative
 require_relative 'entry'
+require "csv"
 
     class AddressBook
         attr_reader :entries
@@ -35,4 +36,17 @@ require_relative 'entry'
             @entries.delete(delete_entry)
         end
 
+        def import_from_csv(file_name)
+
+            # The method starts by reading the file, using  File.read. The file will be in a CSV format. We use the CSV class to parse the file. The result of CSV.parse is an object of type CSV::Table.
+            csv_text = File.read(file_name)
+            csv = CSV.parse(csv_text, headers: true, skip_blanks: true)
+
+            # We iterate over the CSV::Table object's rows. On the next line we create a hash for each row. We convert each row_hash to an Entry by using the add_entry method which will also add the Entry to the AddressBook's entries.
+            csv.each do |row|
+                row_hash = row.to_hash
+                add_entry(row_hash["name"], row_hash["phone_number"], row_hash["email"])
+            end
+
+        end
     end
