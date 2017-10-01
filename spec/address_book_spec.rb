@@ -114,4 +114,44 @@ RSpec.describe AddressBook do
 
      end
    end
+
+   describe "#import_from_csv2" do
+       it "imports the correct number of entries" do
+
+           ## We call the import_from_csv method on the book object which is of type AddressBook (our data model). We pass  import_from_csv the string entries.csv as a parameter
+           book.import_from_csv("entries_2.csv")
+           book_size = book.entries.size
+
+           # Check the size of the entries in AddressBook
+           expect(book_size).to eq 3
+       end
+
+       it "imports the 1st entry" do
+           book.import_from_csv("entries_2.csv")
+
+           #Check the first entry
+           entry_one = book.entries[0]
+
+           check_entry(entry_one, "Caitlin", "555", "cait@aol.com")
+       end
+
+       it "imports the 2nd entry" do
+           book.import_from_csv("entries_2.csv")
+
+           # Check the second entry
+           entry_two = book.entries[1]
+           check_entry(entry_two, "Logan", "222", "logan@yahoo.com")
+
+       end
+
+       it "imports the 3rd entry" do
+           book.import_from_csv("entries_2.csv")
+
+           # Check the third entry
+
+           entry_three = book.entries[2]
+           check_entry(entry_three, "Louie", "333", "meow@cat.net")
+
+       end
+   end
 end
