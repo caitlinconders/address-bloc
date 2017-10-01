@@ -47,6 +47,35 @@ require "csv"
                 row_hash = row.to_hash
                 add_entry(row_hash["name"], row_hash["phone_number"], row_hash["email"])
             end
+        end
 
+        def binary_search(name)
+
+            # We save the index of the leftmost item in the array in a variable named lower, and the index of rightmost item in the array in upper. If we think of the array in terms of left-to-right where the leftmost item is the zeroth index and the rightmost item is the entries.length-1 index.
+            lower = 0
+            upper = entries.length - 1
+
+            # We loop while our lower index is less than or equal to our upper index.
+            while lower <= upper
+
+                # We find the middle index by taking the sum of lower and upper and dividing it by two. Ruby will truncate any decimal numbers, so if upper is five and lower is zero then mid will get set to two. Then we retrieve the name of the entry at the middle index and store it in mid_name.
+                mid = (lower + upper) / 2
+                mid_name = entries[mid].name
+
+                # We compare the name that we are searching for, name, to the name of the middle index, mid_name. We use the == operator when comparing the names which makes the search case sensitive
+                #If name is equal to mid_name we've found the name we are looking for so we return the entry at index mid.
+                if name == mid_name
+                    return entries[mid]
+                # If name is alphabetically before mid_name, then we set upper to mid - 1 because the name must be in the lower half of the array.
+                elsif name < mid_name
+                    upper = mid - 1
+                #If name is alphabetically after mid_name, then we set lower to mid + 1 because the name must be in the upper half of the array.
+                elsif name > mid_name
+                    lower = mid + 1
+                end
+            end
+
+            # If we divide and conquer to the point where no match is found, we return nil.
+            return nil
         end
     end
