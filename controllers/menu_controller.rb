@@ -85,9 +85,68 @@ class MenuController
     end
 
     def search_entries
+
+        # we get the name that the user wants to search for and store it in name
+        print "Search by name: "
+        name = gets.chomp
+
+        #we call search on address_book which will either return a match or nil, it will never return an empty string since import_from_csv will fail if an entry does not have a name.
+        match = address_book.binary_search(name)
+        system "clear"
+
+        #if a match is found, the submenu is called.
+        if match
+            puts match.to_s
+            search_submenu(match)
+        else
+            puts "No match found for #{name}"
+        end
     end
 
+    def search_submenu(entry)
+
+        puts "\nd - delete entry"
+        puts "e - edit this entry"
+        puts "m - return to main menu"
+
+        selection = gets.chomp
+
+        case selection
+            when "d"
+                system "clear"
+                delete_entry(entry)
+                main_menu
+            when "e"
+                edit_entry(entry)
+                system "clear"
+                main_menu
+            when  "m"
+                system "clear"
+                puts "#{selections} is not a valid input"
+                puts entry.to_s
+                search_submenu(entry)
+            end
+        end
+
     def read_csv
+        print "Enter CSV file to import: "
+        file_name = gets.chomp
+
+        if file_name.empty?
+            system "clear"
+            puts "No CSV file read"
+            main_menu
+        end
+
+        # Wse import the specified file with import_from_csv on address_book. We then clear the screen and print the number of entries that were read from the file. All of these commands are wrapped in a begin/rescue block. begin will protect the program from crashing if an exception is thrown.
+        begin
+            entry_count = address_book.import_from_csv(file_name).count
+            system "clear"
+            puts "#{entry_count} new entries added from #{file_name}"
+        rescue
+            puts "#{file_name} is not a valid CSV file, please enter the name of a valid CSV file"
+            read_csv
+        end
     end
 
     def entry_n_submenu
@@ -118,7 +177,10 @@ class MenuController
         case selection
         when "n"
         when "d"
+            delete_entry(entry)
         when "e"
+            edit_entry(entry)
+            entry_submenu(entry)
         when "m"
             system "clear"
             main_menu
@@ -127,5 +189,29 @@ class MenuController
             puts "#{selection} is not a valid input"
             entry_submenu(entry)
         end
+    end
+
+    def delete_entry(entry)
+        address_book.entries.delete(entry)
+        puts "#{entry.name} has been deleted"
+    end
+
+    def edit_entry(entry)
+
+        print "Updated name: "
+        name = gets.chomp
+        print "Updated phone_number: "
+        phone_number = gets.chomp
+        print "Updated email: "
+        email = gets.chomp
+
+        # We use !attribute.empty? to set attributes on entry only if a valid attribute was read from user input.
+        entry.name = name if !name.empty?
+        entry.phone_number = phone_number if !phone_number.empty?
+        entry.email = email if !email.empty?
+        system "clear"
+
+        puts "Updated entry: "
+        puts entry
     end
 end
