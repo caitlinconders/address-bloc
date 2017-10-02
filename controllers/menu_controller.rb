@@ -14,7 +14,8 @@ class MenuController
         puts "3 - Search for an entry"
         puts "4 - Import entries from a CSV"
         puts "5 - View Entry Number"
-        puts "6 - Exit"
+        puts "6 - Nuke all entires"
+        puts "7 - Exit"
         print "Enter your selection: "
 
         ##retrieve user input from the command line using  gets. gets reads the next line from standard input, converts input to integer.
@@ -42,6 +43,11 @@ class MenuController
             entry_n_submenu
             main_menu
         when 6
+            system "clear"
+            @address_book.nuke
+            puts "All entries deleted!"
+            main_menu
+        when 7
             puts "Good-bye!"
 
             ##terminate the program

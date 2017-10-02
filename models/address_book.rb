@@ -10,6 +10,10 @@ require "csv"
             @entries = []
         end
 
+        def nuke
+            @entries = []
+        end
+
         def add_entry(name, phone_number, email)
                 ##we create a variable to store the insertion index
                 index = 0
@@ -76,6 +80,15 @@ require "csv"
             end
 
             # If we divide and conquer to the point where no match is found, we return nil.
+            return nil
+        end
+
+        def iterative_search(name)
+            @entries.each do |entry|
+                if entry.name == name
+                    return entry
+                end
+            end
             return nil
         end
     end
